@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>大麦商城</title>
+<link href="css/common.css" rel="stylesheet" type="text/css" />
+<link href="css/cart.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="js/axios.js"></script>
+
+
+<script type="text/javascript" src="js/vue.js"></script>
+<script type="text/javascript" src="js/comp.js"></script>
+<style type="text/css">
+.login{
+	width:60%;
+	position:fixed;
+	top:30%;
+	left:20%;
+	border-radius:15px;
+	text-align:center;
+	background:#E3DDC4;
+}
+</style>
+</head>
+<body>
+<div class="container header">
+		<div class="span5">
+			<div class="logo">
+				<a href="index.html"> <img
+					src="image/r___________renleipic_01/logo.png" alt="依依不舍" />
+				</a>
+			</div>
+		</div>
+		<div class="span9">
+			<div class="headerAd">
+				<img src="image/header.jpg" width="320" height="50" alt="正品保障"
+					title="正品保障" />
+			</div>
+		</div>
+		<div  class="span10 last">
+			<div class="topNav clearfix">
+				<ul  id="h">
+					<li  
+						 v-if="loginedUser">
+						欢迎{{loginedUser.cname}}					
+						<a href="olist.html">| 我的订单</a>|
+						<a @click="logout" href="index.html">退出 |</a>
+						</li>
+					<li v-else> <a href="login.html">登录</a>
+					<a href="reg.html">|  注册</a>|</li>
+						<li><a  href="personal.html">会员中心</a> |</li>
+					<li><a  href="help.html">购物指南</a> |</li>
+					<li><a  href="aboutus.html">关于我们</a></li>
+				</ul>
+			</div>			
+			<div class="cart">
+				<a href="cart.html">购物车</a>
+			</div>
+			<div class="phone">
+				客服热线: <strong>96008/53277764</strong>
+			</div>
+		</div>
+		<div class="span24">
+			<ul class="mainNav">
+				<li><a href="index.html">首页</a> |</li>
+				<!-- "'detail.html?#' + h.id" -->
+				<li v-for="  c in clist  "><a :href="   'clist.html?#' + c.id">
+						{{c.cname}} </a> |</li>
+			</ul>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+			var vue1=new Vue({
+				el: ".header",
+				data:{
+					clist:[],
+					loginedUser : {},
+				},
+				created: function(){
+							
+					axios({
+						url:"../product.do?op=queryCate"
+					}).then(res=>{
+						this.clist=res.data.list;
+					});
+					axios({
+						url:"../GetLoginedUserServlet.do"
+					}).then(res=>{
+						this.loginedUser=res.data;
+					});	
+				},
+				methods:{
+					logout(){
+						axios({
+							url:"../Logout.do"
+						}).then(res=>{
+							alert(res.data.code);
+							location.href="index.html";
+						});		
+					}
+				}
+			})
+		
+		</script>
+	
+	<div   id="os" class="container cart">
+
+		<div class="span24">
+
+			<div class="step step1">
+				<ul>
+
+					<li class="current"></li>
+					<li>订单列表</li>
+					<li @click="allorders()">全部订单</li>
+				</ul>
+				<ul>
+
+					<li class="current"></li>
+					<li @click="queryorders(0)">待付款</li>
+					<li @click="queryorders(1)">待发货</li>
+					<li @click="queryorders(2)">待收货</li>
+					<li @click="queryorders(3)">评价</li>
+					<li @click="queryorders(4)" style="float:right;width:100px;">退款/售后</li>
+				</ul>
+				
+			</div>
+			<table >
+				<tbody>
+ 			<template v-for="o in olist">
+					<tr   v-if="show1(o.id)" ><!-- 状态: 0未支付,1已支付,2已发货,3已收货,4已评价,5已退货 -->
+						<th colspan="6">订单号:{{o.id}} 金额:<font color="red">{{o.total}} </font>
+							状态 : 
+							<span v-show="o.state==0"><a :href="   ' pay.html#'  +o.id">
+							<font color="red">去付款</font></a></span>
+							<span v-show="o.state==1" style="color:blue;">待发货</span>
+							<span v-show="o.state==2"  style="color:green;">待收货</span>
+							<span v-show="o.state==3">已收货</span>
+							<span v-show="o.state==4">已评价</span>
+							<span v-show="o.state==5">已退货</span>
+							
+							<span type="button"  @click="sure(o.id)" style="float:right;padding-right:50px;color:red;">确认收货</span>
+						</th>
+					</tr>
+					<tr v-if="show2(o.id)">
+						<th>图片</th>
+						<th>商品</th>
+						<th>价格</th>
+						<th>数量</th>
+						<th>小计</th>
+						<th>去评价</th>
+					</tr>
+					<tr>
+						<td width="60"><img :src="  o.image " /></td>
+						<td><a target="_blank">{{o.pname}}</a></td>
+						<td>{{o.shop_price}}</td>
+						<td class="quantity" width="60">{{o.count}}</td>
+						<td width="140"><span class="subtotal">{{o.shop_price*o.count}}</span></td>
+						<td><a @click="showComments(true,o.uid,o.pid)"  :id="o.pid"style="color: blue;">
+						<span>评价该商品</span>					
+					</a></td>
+					</tr>				
+		</template>
+			</tbody>
+		
+			</table>
+				<!-- 评价信息 -->
+		<div class="login" id="myinfo" v-if="commentflag">
+				<span id="unshowinfo" @click="showOrder(false)"  style="float:right;padding-right:20px">X</span>
+			<form name="forminfo" id="ff">
+				请发表您的评论:<br>
+			<!-- class="input" tabIndex="2"  style="width:210px"  -->
+                <textarea class="input" rows="4" cols="40" v-model="comments" placeholder="期待你的神评论……"></textarea><br>							
+				<input id="file" type="file"  name="file"  style="display:none;"@change="upload()"><br>		<!-- 文本值改变做的操作 -->	
+				<img alt="上传图片" src="products/1/noimg.png" height="70px" width="100px"id="upImg" @click="imageOnclick()"><br>
+				<input type="button" value="发表" @click="confirm()">
+			</form>			
+		</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+	var currentID1 = null;// 循环时, 当前的板块名
+	var currentID2 = null;// 循环时, 当前的板块名
+	var vue=new Vue({
+		el: "#os",
+		data:{
+			olist:[],
+			commentflag:false,
+			uid:"",//用户id
+			pid:"",//商品id
+			comments:"",
+			image1:"",
+			image2:"",
+			state:"",
+		},
+		created: function(){		
+				axios({
+					url:"../orders.do?op=queryOrders"
+				}).then(res=>{
+					this.olist=res.data;
+				});		
+		},
+		methods : {
+			allorders(){
+				axios({
+					url:"../orders.do?op=queryOrders"
+				}).then(res=>{
+					this.olist=res.data;
+				});	
+			},
+			queryorders(type){
+				this.state=type;
+				axios.get("../orders.do?op=queryOrdersState&state="+this.state).then(res=>{
+					this.olist=res.data;
+				
+				});
+			
+			},
+			imageOnclick(){
+				document.getElementById("file").click();//fh
+			},
+			showComments:function( value,uid,pid){
+				this.commentflag=value;
+				this.uid=uid;
+				this.pid=pid;
+			},
+			showOrder:function( value,uid,pid){
+				this.commentflag=value;
+			},
+			upload(){
+				var url = "../UploadServlet";
+				var fd = new FormData(ff);
+				axios.post( url, fd).then(res=>{
+					alert(res.data.msg);
+					if(res.data.code){
+						upImg.src =res.data.data;
+					//	tbImg.value =res.data.data;
+						this.image1=res.data.data;
+					}
+				});	
+			},
+			confirm(){
+				var params = new URLSearchParams();	
+			
+				params.append('pid', this.pid);
+				params.append('image1', this.image1);
+				params.append('comments', this.comments);
+				params.append('uid', this.uid);
+				params.append('op', 'insert');
+				axios.post('../comment.do', params).then( res =>{
+					alert(res.data);
+					if(res.data=="您已成功评论"){
+						// 跳转到首页
+						//location.href = "index.html";	
+						this.commentflag=false;
+						//this.cp=1;
+					//	o.pid.value="已评价";
+					//	document.getElementById('o.pid').innerHTML="此商品已评价";
+						this.pid="";
+						this.image1="";
+						this.comments="";
+						this.uid="";
+					}
+				});
+			},
+			query(){
+				axios({
+					url:"../orders.do?op=queryOrders"
+				}).then(res=>{
+					this.olist=res.data;
+				});
+			},
+			show1(id){
+				// 如果当前行的父板块等于 currentBoardName 那就不用显示父板块
+				if(id == currentID1){
+					return false;
+				} else {
+					// 将当前行父板块名称赋值给 currentBoardName
+					currentID1= id;
+					// 返回 true 表示要显示父板块
+					return true;
+				}
+			},
+			show2(id){
+				// 如果当前行的父板块等于 currentBoardName 那就不用显示父板块
+				if(id == currentID2){
+					return false;
+				} else {
+					// 将当前行父板块名称赋值给 currentBoardName
+					currentID2 = id;
+					// 返回 true 表示要显示父板块
+					return true;
+				}
+			},
+			sure(id){
+				 if(confirm("请确认是否要确认收货 " )){
+						axios({
+							url:"../orders.do",
+							params:{
+								id:id,
+								op:'update3'
+							}
+						}).then(  (res)=>{
+							alert(res.data.msg);
+							this.query();
+						});
+	             }else {
+	                 alert("已经取消了该操作");
+	             }	
+			}
+			
+		}
+	})
+	</script>
+	<div id="footer">
+		<page-foot></page-foot>
+	</div>
+	<script type="text/javascript">
+		new Vue({el:"#footer"});
+	</script>
+</body>
+</html>

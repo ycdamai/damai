@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>管理员登录</title>
+<script type="text/javascript" src="../js/axios.js"></script>
+<script type="text/javascript" src="../js/vue.js"></script>
+<script type="text/javascript" src="../js/jquery-1.8.3.js"></script>
+</head>
+<body>
+<form id="form" action="xxx" method="post" align="center">
+    <div>
+        账号：<input type="text"  v-model="name" name="username" id="username"  placeholder="账号"><br>
+        密码：<input type="password"  v-model="pwd" name="password" id="password" placeholder="密码"><br>
+        <input type="checkbox" v-model="rem" name="checkbox" value="1" checked="checked" /> 记住密码
+        &nbsp;<br>
+         <button type="button" @click="login">登录</button>
+    </div>
+</form>
+<script type="text/javascript">
+var vue1=new Vue({
+	el: "#form",
+	data:{
+		
+		name:"",
+		pwd:"",
+		rem:"1",
+	},	
+	created: function(){
+	//	var reg = /pu=([^;]+)/;
+	//	var ret = reg.exec(document.cookie);
+	//	if(ret){
+		//	this.user.account = ret[1];
+	//	}
+		  var str = decodeURIComponent(document.cookie.split(';')); // 获取Cookie
+			// alert(str);//loginInfo=admin+admin
+			
+			  if (str.indexOf("loginInfo")>-1) {
+		            var arr = str.split("=");
+		            var loginInfo = arr[1];
+		            var arr = loginInfo.split("+");
+		            var name = arr[0];
+		         //   name = name.substring(name.lastIndexOf("=", name.length - 1) + 1);
+		            var pwd = arr[1];
+					this.name=name;
+					this.pwd=pwd;
+		        }
+	},
+	methods : {
+		login(){		
+			var params = new URLSearchParams();	
+			params.append('name', this.name);
+			params.append('pwd', this.pwd);
+			params.append('rem', this.rem);
+			params.append('op', 'login');
+			axios.post('../../admin.do', params).then( res =>{	
+				if(res.data== '登录成功'){
+					// 跳转到首页
+				location.href = "manage.html";		
+				}
+			});
+			
+			
+		}						
+	}
+})
+
+
+</script>
+</body>
+</html>

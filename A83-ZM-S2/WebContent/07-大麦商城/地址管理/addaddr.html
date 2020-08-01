@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>会员中心--添加地址</title>
+<link href="css/common.css" rel="stylesheet" type="text/css"/>
+<link href="css/product.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="js/vue.min.js"></script>
+<script type="text/javascript" src="js/axios.min.js"></script>
+<script type="text/javascript" src="js/comp.js"></script>
+
+</head>
+<body>
+<div id="header">
+ 	<page-head></page-head>
+ </div>
+ <script type="text/javascript">
+ 	new Vue({el:"#header"});
+ </script>
+ 
+ 	<div class="container cart">
+		<div class="span24">
+		
+		
+		<div class="step step1" id="info" style="font-size: 15px">
+				地址信息
+				</br>
+				</br>
+		<div> 
+				 <p >
+				  
+					收货地址 :    <input v-model="addr" type="text" name="list.addr" style="width:200px" />
+						<br /><br />
+					收货电话 :    <input v-model="phone" type="text" name="phone" style="width:200px" />	
+					 <br /><br />
+					收 货 人     :    &nbsp<input v-model="name" type="text" name="name" style="width:200px" />	
+					<br /> <br />
+					是否为默认地址:    <input v-model="dft" type="text" name="dft" style="width:160px" />	
+					<br /> <br /> 
+					<input type="button" value="保存" style="float:right" @click="save()">  
+					<br />	 <br />
+					</p>
+					
+					</div> 
+				</div>	 
+				
+<script>
+  var vue=new Vue({
+	  el:"#info",
+	  data:{
+		  addr:"",
+		  phone:"",
+		  name:"",
+		  dft:"",
+	  },
+	 
+	  methods:{
+		  save(){
+			  axios.get("addr.do?op=add&addr="+this.addr+
+					  "&phone="+this.phone+
+					  "&name="+this.name+
+					  "&dft="+this.dft 
+					  ).then(res=>{
+						 	  alert(res.data);
+						 	 location.href="member.html";
+					  				});
+			  
+		  }
+	  }
+		
+  });
+
+</script>			
+  	</div>
+  	</div>
+<div id="footer">
+ 		<page-foot></page-foot>
+ 	</div>
+ 
+ 	<script type="text/javascript">
+ 		new Vue({el:"#footer"});
+ 	</script>
+</body>
+</html>

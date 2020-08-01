@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>会员中心--修改地址</title>
+<link href="css/common.css" rel="stylesheet" type="text/css" />
+<link href="css/cart.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="js/axios.js"></script>
+<script type="text/javascript" src="js/vue.js"></script>
+<script type="text/javascript" src="js/comp2.js"></script>
+
+</head>
+<body>
+<div id="header">
+ 	<page-head></page-head>
+ </div>
+ <script type="text/javascript">
+ 	new Vue({el:"#header"});
+ </script>
+ 
+ 	<div class="container cart">
+		<div class="span24">
+		
+		
+		<div class="step step1" id="info" style="font-size: 15px">
+				地址信息
+				
+		<div> 
+				 <p v-for="list in list" >
+				  
+					收货地址 :    <input v-model="list.addr" type="text" :value="list.addr" style="width:200px" />
+						<br /><br />
+					收货电话 :    <input v-model="list.phone" type="text" :value="list.phone" style="width:200px" />	
+					 <br /><br />
+					收 货 人     :    &nbsp<input v-model="list.name" type="text" :value="list.name" style="width:200px" />	
+					<br /> <br />
+					是否为默认地址:    <input v-model="list.dft" type="text" :value="list.dft" style="width:160px" />	
+					<br /> <br /> 
+					<input type="button" value="保存" style="float:right" @click="save()">  
+					<br />	 <br />
+					</p>
+					
+					</div> 
+				</div>	 
+				
+<script>
+  var vue=new Vue({
+	  el:"#info",
+	  data:{
+		  
+		  list:[],
+		  id:location.hash.substr(1)
+	  },
+	  created : function(){
+		 
+			 
+			axios.get("addr.do?op=query1&id="+this.id).then(res=>{
+				this.list = res.data;
+				 console.info(this.list);
+				 
+			});
+		},
+	  methods:{
+		  save(){
+			   
+			 var addr=this.list[0].addr;
+			 var phone=this.list[0].phone;
+			 var name=this.list[0].name;
+			 var dft=this.list[0].dft;
+			 
+			  axios.get("addr.do?op=update1&addr="+addr+
+					  "&phone="+phone+
+					  "&name="+name+
+					  "&dft="+dft +
+					  "&id="+this.id
+					  ).then(res=>{
+						  
+					 
+						  alert(res.data);
+						  location.href="member.html";
+					 
+				});
+			  
+		  }
+	  }
+		
+  });
+
+</script>			
+  	</div>
+  	</div>
+<div id="footer">
+ 		<page-foot></page-foot>
+ 	</div>
+ 
+ 	<script type="text/javascript">
+ 		new Vue({el:"#footer"});
+ 	</script>
+</body>
+</html>

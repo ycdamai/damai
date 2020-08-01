@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>会员中心--会员中心</title>
+<link href="css/common.css" rel="stylesheet" type="text/css"/>
+<link href="css/product.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="js/vue.min.js"></script>
+<script type="text/javascript" src="js/axios.min.js"></script>
+<script type="text/javascript" src="js/comp.js"></script>
+
+</head>
+<body>
+<div id="header">
+ 	<page-head></page-head>
+ </div>
+ <script type="text/javascript">
+ 	new Vue({el:"#header"});
+ </script>
+ 
+ 	<div class="container cart">
+		<div class="span24">
+		
+		
+		<div class="step step1" id="info" style="font-size: 15px">
+				个人信息
+		<div> 
+				 <p v-for="list in list" >  
+					账  号 :    <input v-model="list.ename" type="text" :value="list.ename" style="width:200px" />
+						<br /><br />
+					昵  称 :    <input v-model="list.cname" type="text" :value="list.cname" style="width:200px" />	
+					 <br /><br />
+					密  码 :    <input v-model="list.password" type="password" :value="list.password" style="width:200px" />	
+					<br /> <br />
+					邮  箱 :    <input v-model="list.email" type="text" :value="list.email" style="width:200px" />	
+					<br /> <br />
+					电  话 :   <input v-model="list.phone" type="text" :value="list.phone" style="width:200px" />	
+					<br /> <br />
+ 					性  别 :   <input v-model="list.sex" type="text" :value="list.sex" style="width:200px" />	
+ 					<br /> <br />
+					注册时间: <input v-model="list.createtime" type="text" :value="list.createtime" style="width:200px" />
+					<input type="button" value="保存" style="float:right" @click="save()">  
+					<br />	
+					 <br />
+					 <br />	
+					 
+					</p>
+					
+					</div> 
+				</div>	 
+				
+<script>
+  var vue=new Vue({
+	  el:"#info",
+	  data:{
+		  
+		  list:[]
+	  },
+	  created : function(){
+			// axios ...
+			axios.get("DUsers.do?op=query").then(res=>{
+				this.list = res.data;
+				 console.info(this.list);
+				 
+			});
+		},
+	  methods:{
+		  save(){
+			   
+			 var ename=this.list[0].ename;
+			 var cname=this.list[0].cname;
+			 var password=this.list[0].password;
+			 var email=this.list[0].email;
+			 var sex=this.list[0].sex;
+			 var phone=this.list[0].phone;
+			 
+			  axios.get("DUsers.do?op=modify&ename="+ename+
+					  "&cname="+cname+
+					  "&password="+password+
+					  "&email="+email+
+					  "&sex="+sex+
+					  "&phone="+phone
+					  ).then(res=>{
+							  alert(res.data);
+					 
+				});
+			  
+		  }
+	  }
+		
+  });
+
+</script>			
+       <div class="step step1" style="font-size: 15px;" id="addr">
+				收货地址
+				<p style="float:right">
+				 <a  href="addaddr.html">添加 </a> 
+				 </p>
+			</div>
+				<table id="table" width="100%" align="center">
+					<tbody>
+					<tr  >
+						<th>收货地址</th>
+						<th>收货电话</th>
+						<th>收货人</th>
+						<th>是否为默认地址</th>
+						<th>操作</th>
+					</tr>
+					
+						<tr  v-for="a in addrlist" align:center style="font-size: 15px; height:30px" >
+						 <td align="center"  >
+						     {{a.addr}}
+						 </td>
+						 <td align="center">
+						     {{a.phone}}
+						 </td> 
+						 <td align="center">
+						     {{a.name}}
+						 </td> 
+						 <td align="center">
+						     {{a.dft}}
+						 </td> 
+						 <td align="center">
+						<input type="button" value="修改"  @click="modify(a.id)"> &nbsp&nbsp
+						 <input type="button" value="删除"  @click="del(a.id)">
+						 </td>
+						</tr>
+				
+					 
+				
+				</tbody></table>
+				</br>
+				</br>
+				</br>
+<script>
+  var vue1=new Vue({
+	  el:"#table",
+	  data:{ 
+		  addrlist:{}
+	  },
+	  created : function(){
+			// axios ...
+			axios.get("addr.do?op=query").then(res=>{
+				this.addrlist = res.data;
+				 console.info(this.addrlist);
+				 
+			});
+		},
+		methods:{
+			modify(id){
+				 
+				 location.href="modifyaddr.html?#"+id;
+			},
+			del(id){
+				axios.get("addr.do?op=del&id="+id).then(res=>{
+				if(res.data=="删除成功"){
+					alert("删除成功")
+					 location.href="member.html";
+				};
+				});
+				  
+			}
+		}
+  });
+
+</script>	
+				  				</div>
+  
+				 
+		  
+	 
+	</div>
+<div id="footer">
+ 		<page-foot></page-foot>
+ 	</div>
+ 
+ 	<script type="text/javascript">
+ 		new Vue({el:"#footer"});
+ 	</script>
+</body>
+</html>

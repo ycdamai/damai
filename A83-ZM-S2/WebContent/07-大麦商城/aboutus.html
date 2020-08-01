@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>大麦商城--关于我们</title>
+<link href="css/slider.css" rel="stylesheet" type="text/css"/>
+<link href="css/common.css" rel="stylesheet" type="text/css"/>
+<link href="css/index.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="js/axios.js"></script>
+<script type="text/javascript" src="js/vue.js"></script>
+<script type="text/javascript" src="js/comp.js"></script>
+
+<style>
+ #about{
+    width:80%;
+    height:480px;
+     
+     margin:5px auto;
+       border: 2px solid #f2f2f2;
+      
+ }
+  .no1{
+    
+    margin:50px 0 0 15px;
+    font-size:15px;
+     text-indent:2em;
+     line-height:1.5em;
+  }
+  #bottom{
+  width:80%;
+  height:300px;
+   
+    margin:15px auto;
+   font-size:14px;
+     text-indent:2em;
+     line-height:1.5em;
+  }
+ #left{
+       border:1px solid #f1f1f1;
+      width:49%;
+      height:250px;
+      background: #f6f6f6;
+      float:left;
+     
+    
+ }
+ #right{
+     border:1px solid #f1f1f1;
+      width:49%;
+      height:250px;
+      background: #f6f6f6;
+       float:right;
+     
+ }
+ url{
+   margin-top:30px;
+ }
+li{
+    text-align:left;
+     padding-top:10px;
+    padding-left:5px;
+    line-height:26px;
+}
+.no{
+  padding-top:18px;
+  font-size:19px;
+   color:#FDA032;
+}
+</style>
+</head>
+<body>
+
+ <div class="container header">
+		<div class="span5">
+			<div class="logo">
+				<a href="index.html"> <img
+					src="image/r___________renleipic_01/logo.png" alt="依依不舍" />
+				</a>
+			</div>
+		</div>
+		<div class="span9">
+			<div class="headerAd">
+				<img src="image/header.jpg" width="320" height="50" alt="正品保障"
+					title="正品保障" />
+			</div>
+		</div>
+		<div  class="span10 last">
+			<div class="topNav clearfix">
+				<ul  id="h">
+					<li  
+						 v-if="loginedUser">
+						欢迎{{loginedUser.cname}}					
+						<a href="olist.html">| 我的订单</a>|
+						<a @click="logout" href="index.html">退出 |</a>
+						</li>
+					<li v-else> <a href="login.html">登录</a>
+					<a href="reg.html">|  注册</a>|</li>
+					<li><a href="personal.html">会员中心</a> |</li>
+					<li><a href="help.html">购物指南</a> |</li>
+					<li><a href="aboutus.html">关于我们</a></li>
+				</ul>
+			</div>			
+			<div class="cart">
+				<a href="cart.html">购物车</a>
+			</div>
+			<div class="phone">
+				客服热线: <strong>96008/53277764</strong>
+			</div>
+		</div>
+		<div class="span24">
+			<ul class="mainNav">
+				<li><a href="index.html">首页</a> |</li>
+				<!-- "'detail.html?#' + h.id" -->
+				<li v-for="  c in clist  "><a :href="   'clist.html?#' + c.id">
+						{{c.cname}} </a> |</li>
+			</ul>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+			var vue1=new Vue({
+				el: ".header",
+				data:{
+					clist:[],
+					loginedUser : {},
+				},
+				created: function(){
+							
+					axios({
+						url:"../product.do?op=queryCate"
+					}).then(res=>{
+						this.clist=res.data.list;
+					});
+					axios({
+						url:"../GetLoginedUserServlet.do"
+					}).then(res=>{
+						this.loginedUser=res.data;
+					});	
+				},
+				methods:{
+					logout(){
+						axios({
+							url:"../Logout.do"
+						}).then(res=>{
+							alert(res.data.code);
+							location.href="index.html";
+						});		
+					}
+				}
+			})
+		
+		</script>
+ 
+<div id="indexdiv" class="container index">
+		 
+		<div class="span24">
+			 <div id="about">
+			 
+			    <img src="images/sale.jpg" style="width:100% ;height:340px">
+			  <p class="no1">
+			 大麦商城是中国深受欢迎的网购零售平台，目前拥有近5亿的注册用户数，每天有超过6000万的固定访客，同时每天的在 线商品数已经超过了8亿件，平均每分钟售出4.8万件商品。截止2011年年底大麦网单日交易额峰值达到43.8亿元，创造270.8万直接且充分就业机会......
+			  </br>
+			  <a href="">  
+			  <img alt="" src="images/T1dKNBXoBbXXXXXXXX-37-11.png" style="float:right;padding-right:15px">
+			  </a>
+			  </br>
+			  </p>
+			 </div>
+			 <div id="bottom"> 
+			 <div id="left">
+			 <p class="no">
+			   公司动态
+			  
+			 </p>
+			   <ul>
+       <li><a href=""  >大麦大学7年助500万网商成长</a></li>
+       <li><a href=" "  >“特色中国遂昌馆”正式上线</a></li>
+       <li><a href=" " >大麦交易额突破10000亿</a></li>
+       <li><a href=" ">坚持透明诚信 捍卫大家的大麦</a></li>
+       <li><a href=" " >大麦旅行“大麦团丽江” 越个性越受欢迎</a></li>
+       </ul>
+        <a href="">  
+			  <img alt="" src="images/T1dKNBXoBbXXXXXXXX-37-11.png" style="float:right;padding-right:15px">
+			  </a>
+			 </div>
+			 <div id="right">
+			   <p class="no">
+			   媒体报道
+			   
+			 </p>
+			   <ul>
+                   <li><a href=" ">人民日报:大麦首例“恶意差评师”案告破</a></li>
+                   <li><a href=" " >大麦网大力打假 净化网络购物环境</a></li>
+                   <li><a href=" " >网购规模年增60%逼近连锁百强</a></li>
+                   <li><a href=" ">女大学生淘宝巡逻3天揪出200个骗子</a></li>
+                   <li><a href=" " >网购为青川注入活力 农户一年收入10万元</a></li>
+               </ul>
+               
+               <a href="">  
+			  <img alt="" src="images/T1dKNBXoBbXXXXXXXX-37-11.png" style="float:right;padding-right:15px">
+			  </a>
+			 </div>
+			 </div>
+		</div>			 
+		<div class="span24">
+			<div class="friendLink">
+				<dl>
+					<dd>新手指南</dd>
+							<dd>
+								<a  target="_blank">支付方式</a>
+								|
+							</dd>
+							<dd>
+								<a  target="_blank">配送方式</a>
+								|
+							</dd>
+							<dd>
+								<a  target="_blank">售后服务</a>
+								|
+							</dd>
+							<dd>
+								<a  target="_blank">购物帮助</a>
+								|
+							</dd>
+							<dd>
+								<a  target="_blank">蔬菜卡</a>
+								|
+							</dd>
+							<dd>
+								<a  target="_blank">礼品卡</a>
+								|
+							</dd>
+							<dd>
+								<a target="_blank">银联卡</a>
+								|
+							</dd>
+							<dd>
+								<a  target="_blank">亿家卡</a>
+								|
+							</dd>
+							
+					<dd class="more">
+						<a >更多</a>
+					</dd>
+				</dl>
+			</div>
+		</div>
+ 
+	 </div>
+ <div id="footer">
+ 		<page-foot></page-foot>
+ 	</div>
+ 
+ 	<script type="text/javascript">
+ 		new Vue({el:"#footer"});
+ 	</script>
+</body></html>

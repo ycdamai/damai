@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>会员中心--修改地址</title>
+<link href="css/common.css" rel="stylesheet" type="text/css"/>
+<link href="css/product.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="js/axios.js"></script>
+<script type="text/javascript" src="js/vue.js"></script>
+<script type="text/javascript" src="js/comp.js"></script>
+
+</head>
+<style>
+ #f1{
+    
+    height:450px;
+    font-color:black;
+ }
+ .left{
+    width:180px;
+    height:450px;
+    float:left;
+    font-size:15px;
+   text-align:center;
+    
+    border: 2px solid #f2f2f2;
+ }
+ .right{
+      
+	  border: 2px solid #f2f2f2;
+ 
+    height:100%;
+      padding-left:230px;
+    
+ }
+  li{
+    height:50px;
+  
+  }  
+ 
+</style>
+<body>
+<div class="container header">
+		<div class="span5">
+			<div class="logo">
+				<a href="index.html"> <img
+					src="image/r___________renleipic_01/logo.png" alt="依依不舍" />
+				</a>
+			</div>
+		</div>
+		<div class="span9">
+			<div class="headerAd">
+				<img src="image/header.jpg" width="320" height="50" alt="正品保障"
+					title="正品保障" />
+			</div>
+		</div>
+		<div  class="span10 last">
+			<div class="topNav clearfix">
+				<ul  id="h">
+					<li  
+						 v-if="loginedUser">
+						欢迎{{loginedUser.ename}}					
+						<a href="olist.html">| 我的订单</a>|
+						<a @click="logout" href="index.html">退出 |</a>
+						</li>
+					<li v-else> <a href="login.html">登录</a>
+					<a href="reg.html">|  注册</a>|</li>
+					<li><a href="personal.html">会员中心</a> |</li>
+					<li><a href="help.html">购物指南</a> |</li>
+					<li><a href="aboutus.html">关于我们</a></li>
+				</ul>
+			</div>			
+			<div class="cart">
+				<a href="cart.html">购物车</a>
+			</div>
+			<div class="phone">
+				客服热线: <strong>96008/53277764</strong>
+			</div>
+		</div>
+		<div class="span24">
+			<ul class="mainNav">
+				<li><a href="index.html">首页</a> |</li>
+				<!-- "'detail.html?#' + h.id" -->
+				<li v-for="  c in clist  "><a :href="   'clist.html?#' + c.id">
+						{{c.cname}} </a> |</li>
+			</ul>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+			var vue1=new Vue({
+				el: ".header",
+				data:{
+					clist:[],
+					loginedUser : {},
+				},
+				created: function(){
+							
+					axios({
+						url:"../product?op=queryCate"
+					}).then(res=>{
+						this.clist=res.data.list;
+					});
+					axios({
+						url:"../GetLoginedUserServlet.do"
+					}).then(res=>{
+						this.loginedUser=res.data;
+					});	
+				},
+				methods:{
+					logout(){
+						axios({
+							url:"../Logout.do"
+						}).then(res=>{
+							alert(res.data.code);
+							location.href="index.html";
+						});		
+					}
+				}
+			})		
+		</script>
+ 
+ 	<div class="container member" id="f1" >
+		 
+			<div class="left">
+				<!--      左侧菜单     -->
+				<div id="sidebar">
+				<ul style="padding-top:30px; ">
+					<li><a href="per-member.html" target="right">个人信息浏览</a>
+					 
+					<li><a href="per-membermodify.html" target="right">修改个人信息</a></li>
+					
+					<li><a href="per-addr.html" target="right">收货地址 </a>
+					 
+					<li><a href="per-addradd.html" target="right">添加地址</a></li>
+					
+					<li><a href="per-addrmodify.html" target="right">修改地址</a></li>
+
+					</ul>
+					 
+					 
+					 
+				</div>
+			</div>
+			<div class="right"  style="border:2px solid #f2f2f2;">
+				<div id="content"  >
+				<h1> </h1>
+				<div class="step step1" id="info" style="font-size: 15px">
+				地址信息
+				</br>
+				</br>
+		<div> 
+				 <p v-for="list in list" >
+				  
+					收货地址 :    <input v-model="list.addr" type="text" :value="list.addr" style="width:200px" />
+						<br /><br />
+					收货电话 :    <input v-model="list.phone" type="text" :value="list.phone" style="width:200px" />	
+					 <br /><br />
+					收 货 人     :    &nbsp<input v-model="list.name" type="text" :value="list.name" style="width:200px" />	
+					<br /> <br />
+					是否为默认地址:    <input v-model="list.dft" type="text" :value="list.dft" style="width:160px" />	
+					<br /> <br /> 
+					<input type="button" value="保存" style="float:right" @click="save()">  
+					<br />	 <br />
+					</p>
+					
+					</div> 
+				</div>	 
+				
+<script>
+  var vue=new Vue({
+	  el:"#info",
+	  data:{
+		  
+		  list:[],
+		  id:location.hash.substr(1)
+	  },
+	  created : function(){
+		 
+			 
+			axios.get("../addr.do?op=query1&id="+this.id).then(res=>{
+				this.list = res.data;
+				 console.info(this.list);
+				 
+			});
+		},
+	  methods:{
+		  save(){
+			   
+			 var addr=this.list[0].addr;
+			 var phone=this.list[0].phone;
+			 var name=this.list[0].name;
+			 var dft=this.list[0].dft;
+			 
+			  axios.get("../addr.do?op=update1&addr="+addr+
+					  "&phone="+phone+
+					  "&name="+name+
+					  "&dft="+dft +
+					  "&id="+this.id
+					  ).then(res=>{
+						  
+					 
+						  alert(res.data);
+						  location.href="per-addr.html";
+					 
+				});
+			  
+		  }
+	  }
+		
+  });
+
+</script>			
+				</div>	
+			</div>
+		</div> 
+	 
+	 
+<div id="footer">
+ 		<page-foot></page-foot>
+ 	</div>
+ 
+ 	<script type="text/javascript">
+ 		new Vue({el:"#footer"});
+ 	</script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>管理后台系统</title>
+<link rel="stylesheet" type="text/css"
+	href="easyui/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="easyui/themes/icon.css">
+<script type="text/javascript" src="easyui/jquery.min.js"></script>
+<script type="text/javascript" src="easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../js/vue.js"></script>
+<script type="text/javascript" src="../js/axios.js"></script>
+<script type="text/javascript">
+
+	var data = [ {
+		//	text : '分类的管理',
+		iconCls : 'fa fa-wpforms',
+		state : 'open',
+		children : [ {
+			text : '商品管理',
+			url : 'product.html'
+		}, {
+			text : '商品类别管理',
+			url : 'category.html'
+		}, {
+			text : '订单管理',
+			url : 'orders.html'
+		}, {
+			text : '主界面管理',
+			url : '../index.html'
+		} ]
+	} ];
+
+	function selectMenu(item) {
+		if ($('#tt').tabs('exists', item.text)) {
+			$('#tt').tabs('select', item.text)
+		} else {
+			$('#tt')
+					.tabs(
+							'add',
+							{
+								title : item.text,
+								
+								split:true,
+								selected : true,
+								closable : true,
+								// iframe 嵌入的 子框架   子页面
+								content : "<iframe src='"
+										+ item.url
+										+ "' "
+										+ "style='width:100%;height:100%;border:0px'></iframe>"
+							//href : '../0606/books.html'
+							});
+		}
+	}
+</script>
+</head>
+<body>
+	<div class="easyui-layout" data-options="fit:true">
+		<div data-options="split:true,   region:'north'" style="height: 40px" id="login">欢迎{{loginedUser.username}} 管理员    
+		<button type="button" ><a @click="logout" >退出 </a></button>
+		
+		   </div>
+		   
+		   <script type="text/javascript">
+			var vue1=new Vue({
+				el: "#login",
+				data:{
+					
+					loginedUser : {},
+				},
+				created: function(){
+				
+					axios({
+						url:"../../GetLoginedUserServlet.do"
+					}).then(res=>{
+						this.loginedUser=res.data;
+					});	
+				},
+				methods:{
+					logout(){
+						axios({
+							url:"../../Logout.do"
+						}).then(res=>{
+						//	alert(res.data.code);
+							location.href="../login.html";
+						});		
+					}
+				}
+			})
+		
+		</script>
+		
+		<div data-options="region:'south',split:true" style="height: 30px;text-align: center; line-height: 25px">
+			<img src="http://www.hyycinfo.com/Examination2.0/images/yc.ico" width="18" height="18" style="display: inline-block; vertical-align: middle;">
+			<a href="http://www.hyycinfo.com/" target="view_window">衡阳市源辰信息科技有限公司</a>
+		</div>
+		<div class="easyui-accordion" data-options="region:'west',split:true,"
+			title="菜单区" style="width: 150px;">
+			<div id="sm" class="easyui-sidemenu" title="基础数据维护"
+				data-options="
+				iconCls:'icon-ok', 
+				data:data, 
+				onSelect: selectMenu"
+				style="overflow: auto;"></div>
+			<div title="物流信息查询" data-options="iconCls:'icon-help'"
+				style="padding: 10px;"></div>
+			<div title="财务报表" data-options="iconCls:'icon-search'"
+				style="padding: 10px;"></div>
+		</div>
+		<div id="tt" class="easyui-tabs"
+			data-options="region:'center',title:'功能区',iconCls:'icon-ok' ,split:true, ">
+		</div>
+	</div>
+</body>
+</html>

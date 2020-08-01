@@ -1,0 +1,240 @@
+
+	
+	
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>大麦商城--购物指南</title>
+    <link href="css/slider.css" rel="stylesheet" type="text/css" />
+<link href="css/common.css" rel="stylesheet" type="text/css" />
+<link href="css/index.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="js/axios.js"></script>
+<script type="text/javascript" src="js/vue.js"></script>
+<script type="text/javascript" src="js/comp.js"></script>
+    <link href="css/common.css" rel="stylesheet" type="text/css" />
+<link href="css/cart.css" rel="stylesheet" type="text/css" />
+
+<link rel="stylesheet" href="//g.alicdn.com/tb/global/3.5.34/global-min.css">
+<script src="//g.alicdn.com/??kissy/k/1.4.7/seed-min.js,tb/global/3.5.34/global-min.js"></script>
+	<link rel="shortcut icon" href="//img.alicdn.com/tps/i4/T1txO5Fk8dXXXON6_X-16-16.ico">
+    <link rel="stylesheet" href="//g.alicdn.com/tb/vipmanager/1.4.0/common/base-min.css"/>
+    <link rel="stylesheet" href="//g.alicdn.com/tb/vipmanager/1.4.0/pages/new/page/index-min.css"/>
+    <script type="text/javascript">
+        window.g_vipconfig = {
+        isActiveUser:false,
+        missionGoUrl:false
+        		        }
+    </script>
+    
+</head>
+
+<div class="container header">
+		<div class="span5">
+			<div class="logo">
+				<a href="index.html"> <img
+					src="image/r___________renleipic_01/logo.png" alt="依依不舍" />
+				</a>
+			</div>
+		</div>
+		<div class="span9">
+			<div class="headerAd">
+				<img src="image/header.jpg" width="320" height="50" alt="正品保障"
+					title="正品保障" />
+			</div>
+		</div>
+		<div  class="span10 last">
+			<div class="topNav clearfix">
+				<ul  id="h">
+					<li  
+						 v-if="loginedUser">
+						欢迎{{loginedUser.cname}}					
+						<a href="olist.html">| 我的订单</a>|
+						<a @click="logout" href="index.html">退出 |</a>
+						</li>
+					<li v-else> <a href="login.html">登录</a>
+					<a href="reg.html">|  注册</a>|</li>
+					<li><a href="personal.html">会员中心</a> |</li>
+					<li><a href="help.html">购物指南</a> |</li>
+					<li><a href="aboutus.html">关于我们</a></li>
+				</ul>
+			</div>			
+			<div class="cart">
+				<a href="cart.html">购物车</a>
+			</div>
+			<div class="phone">
+				客服热线: <strong>96008/53277764</strong>
+			</div>
+		</div>
+		<div class="span24">
+			<ul class="mainNav">
+				<li><a href="index.html">首页</a> |</li>
+				<!-- "'detail.html?#' + h.id" -->
+				<li v-for="  c in clist  "><a :href="   'clist.html?#' + c.id">
+						{{c.cname}} </a> |</li>
+			</ul>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+			var vue1=new Vue({
+				el: ".header",
+				data:{
+					clist:[],
+					loginedUser : {},
+				},
+				created: function(){
+							
+					axios({
+						url:"../product.do?op=queryCate"
+					}).then(res=>{
+						this.clist=res.data.list;
+					});
+					axios({
+						url:"../GetLoginedUserServlet.do"
+					}).then(res=>{
+						this.loginedUser=res.data;
+					});	
+				},
+				methods:{
+					logout(){
+						axios({
+							url:"../Logout.do"
+						}).then(res=>{
+							alert(res.data.code);
+							location.href="index.html";
+						});		
+					}
+				}
+			})		
+		</script>
+
+	
+<div id="content" class="unlogin" >
+<!-- 个人信息 -->
+
+    
+    <div class="viper-info newer-mod">
+
+        
+            <div class="viper-avatar">
+                <a class="viper-avatarpic" href="start.html" target="_blank"></a>
+                <p class="viper-nick">亲，<a href="start.html" target="_self">登录</a></p>
+                <p class="viper-unlogintips">可以查看您的更多成长信息哦！</p>
+            </div>
+                <div class="viper-plugin J_ViperPluginPanel">
+
+        </div>
+
+                    <div class="viper-gift">
+                <a target="_blank"  class="logo"><img alt="" src=""></a>
+
+                <p class="title"><a >新手专享优惠礼包</a></p>
+
+                <p class="tips">包含现金红包，包邮卡，专享折扣等</p>
+            </div>
+        
+    </div>
+    <!-- 任务区 -->
+    
+
+    <!-- 购物步骤 -->
+
+    <div class="viper-step newer-mod J_ViperStep">
+        <div class="newer-hd"><h3>大麦购物，只需5步<span>手把手教你学会购物</span><a class="shopping" href="" target="_blank">1分钱购物体验</a></h3></div>
+        <div class="newer-bd J_ViperStepSlide">
+            <ul>
+                <li class="viper-stepitem">
+                    <img src="//img.alicdn.com/tps/i2/T1opt0Fd4jXXc54VPk-988-269.png">
+                    
+                </li>
+                <li class="viper-stepitem">
+                    <img src="//img.alicdn.com/tps/i3/T1zWOsFnVcXXc54VPk-988-269.png">
+                    
+                </li>
+                <li class="viper-stepitem">
+                    <img src="//img.alicdn.com/tps/i4/T1aIKtFhFdXXc54VPk-988-269.png">
+                </li>
+                <li class="viper-stepitem">
+                    <img src="//img.alicdn.com/tps/i1/T1FpKsFcXeXXc54VPk-988-269.png">
+                  <img src="//img.alicdn.com/tps/i4/T1oAF_Fl0fXXctdLvr-4-7.png">
+                </li>
+                <li class="viper-stepitem">
+                    <img src="//img.alicdn.com/tps/i2/T1v3etFdxdXXc54VPk-988-269.png">
+                </li>
+            </ul>
+            <a class="packup-btn J_PackUpBtn" href="#">收起</a>
+        </div>
+    </div>
+
+        
+   
+                        </div>
+          
+
+    
+
+<!-- 新人帮助区 -->
+    <div class="container index" id="dudu">
+		<div class="span24">
+			<div id="hotProduct" class="hotProduct clearfix">
+				<div class="title">
+					<strong>热门商品</strong>
+					<!-- <a  target="_blank"></a> -->
+				</div>
+				<ul class="tab">
+					<li class="current"><a href="./蔬菜分类.htm?tagIds=1"
+						target="_blank"></a></li>
+					<li><a target="_blank"></a></li>
+					<li><a target="_blank"></a></li>
+				</ul>
+				<ul class="tabContent" style="display: block;">
+
+					<li v-for=" h in hotlist"><a target="_blank"
+						:href="'detail.html?' + h.id"> <img :src="h.image"
+							style="display: block;">
+					</a></li>
+				</ul>
+			</div>
+		</div>
+			</ul>
+			</div>
+		</div>
+
+		
+
+
+		
+	</div>
+
+	<script type="text/javascript">
+			var vue=new Vue({
+				el: "#dudu",
+				data:{
+					hotlist:[],
+					
+				
+				},
+				created: function(){
+					axios.get("../product.do?op=query").then(res=>{
+						this.hotlist=res.data.list;
+					});
+					
+					
+				
+				}
+			})
+		
+		</script>
+
+</div>
+
+
+	<div id="footer">
+		<page-foot></page-foot>
+	</div>
+	<script type="text/javascript">
+		new Vue({el:"#footer"});
+	</script>
+</body>
+</html>
